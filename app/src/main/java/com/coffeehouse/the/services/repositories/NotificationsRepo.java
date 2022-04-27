@@ -60,7 +60,7 @@ public class NotificationsRepo implements Fetching {
                 int count = 0;
                 for (QueryDocumentSnapshot doc : Objects.requireNonNull(value)) {
                     if (doc != null) {
-                        Notification notification = new Notification();
+                        Notification notification;
                         notification = doc.toObject(Notification.class);
                         notification.setId(doc.getId());
                         if (LocalDataManager.getReadNotifications().contains(notification.getId())) {

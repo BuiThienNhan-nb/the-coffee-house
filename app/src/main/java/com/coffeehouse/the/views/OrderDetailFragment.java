@@ -97,9 +97,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             orderDetailBinding.textAddmenu.setError("Chưa có sản phẩm trong giỏ");
         }
 
-        orderDetailBinding.textChange.setOnClickListener(this::onClick);
-        orderDetailBinding.textAddmenu.setOnClickListener(this::onClick);
-        orderDetailBinding.textChoosepromotion.setOnClickListener(this::onClick);
+        orderDetailBinding.textChange.setOnClickListener(this);
+        orderDetailBinding.textAddmenu.setOnClickListener(this);
+        orderDetailBinding.textChoosepromotion.setOnClickListener(this);
 
         cartItemAdapter.setClickListener(this::updateCartItem);
 

@@ -9,10 +9,10 @@ import com.coffeehouse.the.services.repositories.OrdersRepo;
 import java.util.List;
 
 public class OrderHistoryViewModel extends ViewModel {
-    private final OrdersRepo ordersRepo;
+    private final OrdersRepo ordersRepo = new OrdersRepo();
 
     public OrderHistoryViewModel() {
-        ordersRepo = new OrdersRepo();
+
     }
 
     public LiveData<List<Order>> getOrders() {

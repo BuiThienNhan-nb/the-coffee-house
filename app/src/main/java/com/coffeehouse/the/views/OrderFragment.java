@@ -53,9 +53,7 @@ public class OrderFragment extends Fragment implements CategoryBottomSheet.SendC
         getProducts(productsAdapter);
         //END BINDING
 
-        productsAdapter.setClickListener(product -> {
-            navigateToProductDetailBottomSheet(product);
-        });
+        productsAdapter.setClickListener(this::navigateToProductDetailBottomSheet);
 
         //Inflate Menu Bottom Sheet
         orderFragmentBinding.menuSelectionCardView.setOnClickListener(view -> {

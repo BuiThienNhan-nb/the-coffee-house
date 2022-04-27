@@ -75,7 +75,8 @@ public class OrdersRepo implements Fetching {
                                                 }
                                                 cart.setItems(cartItems);
                                             }
-                                            Order order = new Order();
+                                            Order order;
+                                            //new Order();
                                             order = orderDoc.toObject(Order.class);
                                             order.setId(orderDoc.getId());
                                             order.setCart(cart);

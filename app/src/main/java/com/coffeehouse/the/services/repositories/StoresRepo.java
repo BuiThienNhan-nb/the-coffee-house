@@ -40,7 +40,7 @@ public class StoresRepo implements Fetching {
                 List<Store> _stores = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : Objects.requireNonNull(value)) {
                     if (doc != null) {
-                        Store store = new Store();
+                        Store store;
                         store = Store.fromQueryDocumentSnapshot(doc);
                         _stores.add(store);
                     }

@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PromotionsRepo implements Fetching {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -37,7 +38,7 @@ public class PromotionsRepo implements Fetching {
                         for (QueryDocumentSnapshot doc : value) {
                             Log.d("PROMOTION", doc.getId());
                             if (doc != null) {
-                                Promotion promotion = new Promotion();
+                                Promotion promotion;
                                 promotion = doc.toObject(Promotion.class);
                                 promotion.setId(doc.getId());
                                 if (Date.from(Instant.now()).before(promotion.getExpiryDate()))
@@ -79,7 +80,7 @@ public class PromotionsRepo implements Fetching {
     }
 
     public Promotion getPromotionById(String promotionId) {
-        for (Promotion promotion : promotions.getValue()) {
+        for (Promotion promotion : Objects.requireNonNull(promotions.getValue())) {
             if (promotion.getId().equals(promotionId))
                 return promotion;
         }

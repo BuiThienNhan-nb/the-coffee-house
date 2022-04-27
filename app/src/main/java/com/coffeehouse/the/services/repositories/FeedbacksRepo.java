@@ -32,7 +32,7 @@ public class FeedbacksRepo implements Fetching {
                 List<Feedback> list = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
                     if (doc != null) {
-                        Feedback feedback = new Feedback();
+                        Feedback feedback;
                         feedback = doc.toObject(Feedback.class);
                         list.add(feedback);
                     }

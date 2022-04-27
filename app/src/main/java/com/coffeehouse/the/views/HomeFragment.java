@@ -1,5 +1,6 @@
 package com.coffeehouse.the.views;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private HomeViewModel homeViewModel = new HomeViewModel();
     private HomeFragmentBinding binding;
     private final NotificationAdapter adapter = new NotificationAdapter();
-    NotificationListItemBinding notificationListItemBinding;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -47,8 +47,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         binding = DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-        binding.cardviewDelivery.setOnClickListener(this::onClick);
-        binding.pickUpCard.setOnClickListener(this::onClick);
+        binding.cardviewDelivery.setOnClickListener(this);
+        binding.pickUpCard.setOnClickListener(this);
 
         setUpRecyclerView();
         setUpCarouselViewer();
@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         recyclerView.setAdapter(adapter);
 
         final int[] notiCount = {0};
-        homeViewModel.getNotifications().observe(this, items -> {
+        homeViewModel.getNotifications().observe(getViewLifecycleOwner(), items -> {
             adapter.setItems(items);
             notiCount[0] = items.size();
             setCountText(items.size());
@@ -113,6 +113,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -127,6 +128,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void navigateToStoresFragment() {
         FragmentManager fragmentManager = getFragmentManager();
+        assert fragmentManager != null;
         fragmentManager.beginTransaction().replace(R.id.home_fragment_container, new StoresFragment()).addToBackStack(null).commit();
         BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_store_location);

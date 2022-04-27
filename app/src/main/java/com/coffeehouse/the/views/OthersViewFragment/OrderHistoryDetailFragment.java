@@ -1,5 +1,7 @@
 package com.coffeehouse.the.views.OthersViewFragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +22,8 @@ import com.coffeehouse.the.databinding.OrderHistoryDetailFragmentBinding;
 import com.coffeehouse.the.models.Order;
 import com.coffeehouse.the.services.repositories.PromotionsRepo;
 import com.coffeehouse.the.viewModels.OrderDetailViewModel;
+import com.coffeehouse.the.views.OrderFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,20 +51,37 @@ public class OrderHistoryDetailFragment extends Fragment {
         orderHistoryDetailFragmentBinding.setOrder(order);
         orderDetailViewModel = new ViewModelProvider(this).get(OrderDetailViewModel.class);
         orderDetailViewModel.setCart(order.getCart());
-        RecyclerView recyclerView = orderHistoryDetailFragmentBinding.orderCartRecyclerView;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
-        getCart(adapter);
+        setUpRecyclerView();
+//        RecyclerView recyclerView = orderHistoryDetailFragmentBinding.orderCartRecyclerView;
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setAdapter(adapter);
+//        getCart(adapter);
         //End binding
 
         //Set up View
         orderHistoryDetailFragmentBinding.totalOrder.setText(total());
+        if (order.getDelivered())
+            orderHistoryDetailFragmentBinding.txtOrderStatus.setText("Hoàn tất");
+        else
+            orderHistoryDetailFragmentBinding.txtOrderStatus.setText("Đang chuẩn bị");
         promotionsRepo.getPromotions().observe(getViewLifecycleOwner(), observe -> {
             if (promotionsRepo.getPromotionById(order.getPromotionId()) != null)
                 orderHistoryDetailFragmentBinding.textPromotionCode.setText(promotionsRepo.getPromotionById(order.getPromotionId()).getCode());
         });
         //End
+
+        orderHistoryDetailFragmentBinding.btnBuyBack.setOnClickListener(l -> {
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.home_fragment_container, new OrderFragment()).addToBackStack(null).commit();
+            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setSelectedItemId(R.id.action_order);
+        });
+        orderHistoryDetailFragmentBinding.btnContactSupporter.setOnClickListener(l -> {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:18006936"));
+            startActivity(intent);
+        });
 
         orderHistoryDetailFragmentBinding.closeOrderHistoryFragmentDetailFragment.setOnClickListener(l -> {
             OrderHistoryFragment fragment = new OrderHistoryFragment();
@@ -67,6 +89,14 @@ public class OrderHistoryDetailFragment extends Fragment {
         });
 
         return orderHistoryDetailFragmentBinding.getRoot();
+    }
+
+    private void setUpRecyclerView() {
+        RecyclerView recyclerView = orderHistoryDetailFragmentBinding.orderCartRecyclerView;
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        getCart(adapter);
     }
 
     private void getCart(OrderHistoryDetailAdapter adapter) {

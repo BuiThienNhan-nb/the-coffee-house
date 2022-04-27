@@ -23,6 +23,7 @@ public class ProductsRepo implements Fetching {
     private final MutableLiveData<List<Product>> products = new MutableLiveData<>();
     private final MutableLiveData<List<Product>> dataFavProduct = new MutableLiveData<>();
     private final MutableLiveData<List<Product>> filters = new MutableLiveData<>();
+    //private List<Product> fProducts = new ArrayList<>();
 
     public ProductsRepo() {
         setUpRealTimeListener();
@@ -37,12 +38,13 @@ public class ProductsRepo implements Fetching {
                 List<Product> currentProducts = new ArrayList<>();
                 for (QueryDocumentSnapshot doc : value) {
                     if (doc != null) {
-                        Product product = new Product();
+                        Product product;
                         product = doc.toObject(Product.class);
                         product.setId(doc.getId());
                         currentProducts.add(product);
                     }
                 }
+                //fProducts = currentProducts;
                 products.setValue(currentProducts);
             }
         });
@@ -91,11 +93,17 @@ public class ProductsRepo implements Fetching {
     }
 
     public Product getProductById(String productId) {
-        for (Product product : products.getValue()) {
-            if (product.getId().equals(productId))
-                return product;
+        int i = 0;
+        if (products.getValue() == null) {
+
+        } else {
+            for (Product product : products.getValue()) {
+                if (product.getId().equals(productId)) {
+                    return product;
+                }
+            }
         }
-        return null;
+        return new Product();
     }
 
     //FAVORITE PRODUCT REGION
